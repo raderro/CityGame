@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gra o zarządzaniu miasteczkiem</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="resources">
+        <p>Money: <span id="money">1000</span></p>
+        <p>Energy: <span id="energy">500</span></p>
+        <p>Population: <span id="population">0</span></p>
+    </div>
+  <canvas id="gameCanvas"></canvas>
+  <div id="buildingMenu" style="display: none;">
+    <button id="closeMenuBtn">Zamknij menu</button>
+    <h2>Wybierz budynek</h2>
+    <div id="menuOptions"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
