@@ -125,3 +125,70 @@ export function drawUI() {
     ctx.fillText(res.label, startX + iconSize + 20, res.y + 30);
   });
 }
+
+export function drawEvent(event) {
+  const ctx = state.ctx;
+  const canvas = ctx.canvas;
+  const x = canvas.width / 2 - 300;
+  const y = canvas.height / 2 - 150;
+  const width = 600;
+  const height = 400;
+
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+  ctx.fillRect(x, y, width, height);
+
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(x, y, width, height);
+
+  ctx.fillStyle = 'white';
+  ctx.font = '24px Arial';
+  ctx.fillText(event.title, x + 20, y + 40);
+
+  ctx.font = '18px Arial';
+  wrapText(ctx, event.description, x + 20, y + 80, width - 40, 25);
+
+  let infoY = y + 180;
+
+  ctx.fillStyle = 'lightgreen';
+  ctx.fillText('Efekt (Podpisz): ' + formatEffect(event.onAccept), x + 20, infoY);
+  infoY += 25;
+
+  ctx.fillStyle = 'salmon';
+  ctx.fillText('Efekt (Odmów): ' + formatEffect(event.onReject), x + 20, infoY);
+
+  ctx.fillStyle = 'green';
+  ctx.fillRect(x + 75, y + 285, 160, 50);
+  ctx.fillStyle = 'white';
+  ctx.fillText('Podpisz', x + 120, y + 310);
+
+  ctx.fillStyle = 'red';
+  ctx.fillRect(x + 355, y + 285, 160, 50);
+  ctx.fillStyle = 'white';
+  ctx.fillText('Odmów', x + 400, y + 310);
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(' ');
+  let line = '';
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + ' ';
+    const metrics = ctx.measureText(testLine);
+    const testWidth = metrics.width;
+    if (testWidth > maxWidth && n > 0) {
+      ctx.fillText(line, x, y);
+      line = words[n] + ' ';
+      y += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  ctx.fillText(line, x, y);
+}
+
+function formatEffect(effect) {
+  const parts = [];
+  if (effect.money !== undefined) parts.push(`Pieniądze: ${effect.money > 0 ? '+' : ''}${effect.money}`);
+  if (effect.satisfaction !== undefined) parts.push(`Satysfakcja: ${effect.satisfaction > 0 ? '+' : ''}${effect.satisfaction}`);
+  return parts.join(', ');
+}

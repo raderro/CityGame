@@ -1,5 +1,5 @@
 import { state } from '../data/config.js';
-import { drawUI } from '../ui/UI.js';
+import { drawEvent, drawUI } from '../ui/UI.js';
 import { drawBuildingMenu, drawInfoMenu } from '../ui/BuildingMenu.js';
 import { drawUpgradeMenu } from '../ui/UpgradeMenu.js';
 
@@ -43,4 +43,7 @@ export function drawMap() {
   drawBuildingMenu();
   drawUpgradeMenu();
   drawInfoMenu();
+  if (state.showEvent && state.currentEvent) {
+  drawEvent(state.currentEvent);
+  }
 }

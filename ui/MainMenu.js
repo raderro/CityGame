@@ -97,6 +97,42 @@ export function drawMainMenu() {
   if (state.creatingProfile) {
     drawCreateProfileOverlay(ctx);
   }
+
+  const boxWidth = 280;
+  const boxHeight = 160;
+  const padding = 15;
+  const x = ctx.canvas.width - boxWidth - padding;
+  const y = ctx.canvas.height - boxHeight - padding;
+
+  ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+  ctx.fillRect(x, y, boxWidth, boxHeight);
+
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x, y, boxWidth, boxHeight);
+
+  ctx.fillStyle = "#fff";
+  ctx.font = "14px Arial";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+
+  ctx.fillText("Twórcy:", x + 10, y + 10);
+
+  const creators = [
+    { role: "Programista", name: "Radosław Jakóbik" },
+    { role: "Programista", name: "Patryk Stawarz"},
+    { role: "Grafik", name: "Zofia Jura" },
+    { role: "Pomysły", name: "Radosław Jakóbik" },
+    { role: "Dźwięki", name: "OpenGameArt.org" },
+  ];
+
+  creators.forEach((c, i) => {
+    const lineY = y + 30 + i * 28;
+    ctx.fillText(`${c.role}:`, x + 10, lineY);
+    ctx.fillText(c.name, x + 140, lineY);
+  });
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
 }
 
 function drawCreateProfileOverlay(ctx) {

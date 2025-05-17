@@ -1,6 +1,6 @@
 import { initConfig, state } from '../data/config.js';
 import { drawMap } from './MapRenderer.js';
-import { setupInputHandlers } from './InputHandler.js';
+import { setupInputHandlers, triggerEvent } from './InputHandler.js';
 import { updateBuildings } from './ResourceManager.js';
 import { drawMainMenu } from '../ui/MainMenu.js';
 import { loadAvatars } from './ProfileManager.js';
@@ -8,6 +8,9 @@ import { loadGameState } from './GameManager.js';
 import { drawQuestMenu } from '../ui/QuestMenu.js';
 import { quests as allQuests } from '../data/quests.js';
 import { checkQuestProgress } from './QuestManager.js';
+
+const menu_sound = new Audio('assets/sounds/menu_sound.mp3');
+const game_sound = new Audio('assets/sounds/game_sound.mp3');
 
 export class Game {
   constructor(canvas, ctx) {
@@ -21,6 +24,11 @@ export class Game {
     initConfig(this.canvas, this.ctx);
     setupInputHandlers(this.canvas);
     loadAvatars();
+    document.addEventListener('click', () => {
+      if (state.isMainMenuVisible) {
+        menu_sound.play();
+      }
+    });
     state.quests = JSON.parse(JSON.stringify(allQuests));
 
     if (state.selectedProfileIndex !== null) {
@@ -40,8 +48,37 @@ export class Game {
 
     if (state.isMainMenuVisible) {
       drawMainMenu();
+      menu_sound.addEventListener('ended', () => {
+        menu_sound.play();
+      });
     } else {
       drawMap();
+      menu_sound.pause();
+      game_sound.play();
+      game_sound.addEventListener('ended', () => {
+        game_sound.play();
+      });
+    }
+
+    if (!state.isMainMenuVisible) {
+
+    }
+
+    const now = Date.now();
+
+    if (!state.lastEventTime && !state.isMainMenuVisible) {
+      state.lastEventTime = now;
+    }
+
+    if (
+      !state.isMainMenuVisible &&
+      !state.showEvent &&
+      !state.isMainMenuVisible &&
+      now - state.lastEventTime > 60000 && 
+      Math.random() < 0.01
+    ) {
+      state.lastEventTime = now;
+      triggerEvent();
     }
 
     if (state.isQuestMenuVisible) {

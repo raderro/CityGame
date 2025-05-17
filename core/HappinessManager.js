@@ -27,7 +27,7 @@ export function calculateHappiness() {
 
       let industrialPenalty = 0;
       let pollutionIncrease = 0;
-      
+
       for (let dx = -2; dx <= 2; dx++) {
         for (let dy = -2; dy <= 2; dy++) {
           const nx = x + dx;
@@ -85,21 +85,30 @@ export function calculateHappiness() {
       }
 
       happiness += bonus;
-
       happiness += (building.level - 1) * 5;
-
       happiness -= totalPollution / 100;
 
       if (nearbyHomes > 6) happiness -= 15;
 
-      happiness = Math.max(happiness, 0);
-      happiness = Math.min(happiness, 100);
+      happiness = Math.max(0, Math.min(100, happiness));
 
       totalHappiness += happiness;
     }
   }
 
-  state.happinessLevel = residentialCount ? Math.round(totalHappiness / residentialCount) : 100;
+  const targetHappiness = residentialCount ? Math.round(totalHappiness / residentialCount) : 100;
+
+  const delta = targetHappiness - state.happinessLevel;
+  const deltaLimit = 3;
+
+  if (Math.abs(delta) > deltaLimit) {
+    state.happinessLevel += Math.sign(delta) * deltaLimit;
+  } else {
+    state.happinessLevel = targetHappiness;
+  }
+
+  state.happinessLevel = Math.max(0, Math.min(100, state.happinessLevel));
+
   if (state.happinessLevel > 100) state.happinessLevel = 100;
   if (state.happinessLevel < 0) state.happinessLevel = 0;
 }

@@ -22,6 +22,8 @@ export function saveGameState() {
     mines: state.mines,
     powerPlants: state.powerPlants,
     quests: state.quests,
+    nextEventId: state.nextEventId || 1,
+    lastEventTime: state.lastEventTime,
   };
 
   localStorage.setItem(key, JSON.stringify(dataToSave));
@@ -57,6 +59,12 @@ export function loadGameState() {
       state.powerPlants = saved.powerPlants;
       if (saved.quests) {
         state.quests = saved.quests;
+      }
+      if (saved.nextEventId) {
+        state.nextEventId = saved.nextEventId;
+      }
+      if (saved.lastEventTime) {
+        state.lastEventTime = saved.lastEventTime;
       }
     }
   } catch (e) {

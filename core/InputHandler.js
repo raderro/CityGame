@@ -6,6 +6,8 @@ import { saveProfiles, setSelectedProfile } from './ProfileManager.js';
 import { loadGameState, saveGameState } from './GameManager.js';
 import { claimQuestReward } from './QuestManager.js';
 import { drawQuestMenu } from '../ui/QuestMenu.js';
+import { events } from '../data/events.js';
+import { drawEvent } from '../ui/UI.js';
 
 export function setupInputHandlers(canvas) {
   canvas.addEventListener('click', handleClick);
@@ -66,9 +68,74 @@ export function setupInputHandlers(canvas) {
   });
 }
 
+export function triggerEvent() {
+  if (!state.nextEventId) state.nextEventId = 1;
+  if (state.nextEventId > events.length) return;
+
+  const event = events.find(e => e.id === state.nextEventId);
+  if (!event) return;
+
+  state.currentEvent = event;
+  state.showEvent = true;
+
+  state.nextEventId++;
+
+  drawEvent(state.currentEvent);
+}
+
+function resolveEvent(choice) {
+  if (!state.currentEvent) return;
+
+  const effect = choice === 'accept' ? state.currentEvent.onAccept : state.currentEvent.onReject;
+
+  if (effect.money !== undefined && state.money + effect.money < 0) {
+    return;
+  }
+
+  if (effect.money !== undefined) state.money += effect.money;
+  if (effect.satisfaction !== undefined) state.happinessLevel += effect.satisfaction;
+
+  if (state.happinessLevel > 100) state.happinessLevel = 100;
+  if (state.happinessLevel < 0) state.happinessLevel = 0;
+
+  saveGameState();
+
+  state.currentEvent = null;
+  state.showEvent = false;
+  drawMap();
+}
+
 function handleClick(e) {
   if (e.button !== 0 || state.isDragging) return;
   const mouseX = e.offsetX, mouseY = e.offsetY;
+
+  if (state.showEvent && state.currentEvent) {
+    const mouseX = e.offsetX;
+    const mouseY = e.offsetY;
+
+    const canvas = state.ctx.canvas;
+    const x = canvas.width / 2 - 300;
+    const y = canvas.height / 2 - 150;
+
+    if (
+      mouseX >= x + 75 && mouseX <= x + 235 &&
+      mouseY >= y + 285 && mouseY <= y + 335
+    ) {
+      resolveEvent('accept');
+      playClickSound();
+      return;
+    }
+    if (
+      mouseX >= x + 355 && mouseX <= x + 515 &&
+      mouseY >= y + 285 && mouseY <= y + 335
+    ) {
+      resolveEvent('reject');
+      playClickSound();
+      return;
+    }
+    return;
+  }
+
 
   if (state.isBuildingMenuVisible) {
     for (const item of state.buildingMenuItems) {

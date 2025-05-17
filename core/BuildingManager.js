@@ -128,6 +128,10 @@ function isTileBlack(x, y) {
   const screenX = x * scaledTileSize + state.cameraOffsetX;
   const screenY = y * scaledTileSize + state.cameraOffsetY;
 
+  const BLACK = { r: 50, g: 50, b: 50 };
+  const BLUE = { r: 15, g: 164, b: 231  };
+  const YELLOW = { r: 253, g: 236, b: 166 };
+
   try {
     const imageData = state.ctx.getImageData(screenX, screenY, scaledTileSize, scaledTileSize).data;
 
@@ -136,9 +140,9 @@ function isTileBlack(x, y) {
       const g = imageData[i + 1];
       const b = imageData[i + 2];
 
-      const isBlack = r < 50 && g < 50 && b < 50;
-      const isBlue = b > 150 && r <= 15 && g > 100;
-      const isYellow = r > 150 && g > 150 && b < 170;
+      const isBlack = r === BLACK.r && g === BLACK.g && b === BLACK.b;
+      const isBlue = r === BLUE.r && g === BLUE.g && b === BLUE.b;
+      const isYellow = r === YELLOW.r && g === YELLOW.g && b === YELLOW.b;
 
       if (isBlack || isBlue || isYellow) return true;
     }
@@ -148,3 +152,4 @@ function isTileBlack(x, y) {
 
   return false;
 }
+
