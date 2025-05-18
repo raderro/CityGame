@@ -71,10 +71,9 @@ export class Game {
     }
 
     if (
-      !state.isMainMenuVisible &&
       !state.showEvent &&
       !state.isMainMenuVisible &&
-      now - state.lastEventTime > 60000 &&
+      now - state.lastEventTime > 120000 &&
       Math.random() < 0.01
     ) {
       state.lastEventTime = now;
