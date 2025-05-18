@@ -74,10 +74,12 @@ export class Game {
       !state.isMainMenuVisible &&
       !state.showEvent &&
       !state.isMainMenuVisible &&
-      now - state.lastEventTime > 60000 && 
+      now - state.lastEventTime > 60000 &&
       Math.random() < 0.01
     ) {
       state.lastEventTime = now;
+      state.isQuestMenuVisible = false;
+      state.isBuildingMenuVisible = false;
       triggerEvent();
     }
 
