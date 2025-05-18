@@ -106,7 +106,7 @@ export const events = [
     },
     {
         id: 16,
-        title: "Nowe przepisy dotyczące ochrony zdrowia psychicznego",
+        title: "Nowe przepisy dotyczące zdrowia psychicznego",
         description: "Wprowadzenie nowych przepisów dotyczących ochrony zdrowia psychicznego. To kosztowna decyzja, ale poprawi wizerunek miasta. Brak decyzji może spotkać się z krytyką aktywistów.",
         onAccept: { money: -1500, satisfaction: 10 },
         onReject: { satisfaction: -5 }
@@ -116,6 +116,41 @@ export const events = [
         title: "Inwestycja w technologie",
         description: "Propozycja zwiększenia wydatków na nowe technologie. To kosztowna decyzja, ale poprawi wizerunek miasta. Brak decyzji może spotkać się z krytyką technologów.",
         onAccept: { money: -2000, satisfaction: 10 },
+        onReject: { satisfaction: -5 }
+    },
+    {
+        id: 18,
+        title: "Nowe przepisy dotyczące ochrony klimatu",
+        description: "Wprowadzenie nowych przepisów dotyczących ochrony klimatu. To kosztowna decyzja, ale poprawi wizerunek miasta. Brak decyzji może spotkać się z krytyką ekologów.",
+        onAccept: { money: -1500, satisfaction: 10 },
+        onReject: { satisfaction: -5 }
+    },
+    {
+        id: 19,
+        title: "Inwestycja w transport ekologiczny",
+        description: "Propozycja zwiększenia wydatków na transport ekologiczny. To kosztowna decyzja, ale poprawi wizerunek miasta. Brak decyzji może spotkać się z krytyką ekologów.",
+        onAccept: { money: -2000, satisfaction: 10 },
+        onReject: { satisfaction: -5 }
+    },
+    {
+        id: 20,
+        title: "Nowe przepisy dotyczące zdrowia publicznego",
+        description: "Wprowadzenie nowych przepisów dotyczących ochrony zdrowia publicznego. To kosztowna decyzja, ale poprawi wizerunek miasta. Brak decyzji może spotkać się z krytyką aktywistów.",
+        onAccept: { money: -1500, satisfaction: 10 },
+        onReject: { satisfaction: -5 }
+    },
+    {
+        id: 21,
+        title: "Inwestycja w bezpieczeństwo",
+        description: "Propozycja zwiększenia wydatków na bezpieczeństwo. To kosztowna decyzja, ale poprawi wizerunek miasta. Brak decyzji może spotkać się z krytyką aktywistów.",
+        onAccept: { money: -2000, satisfaction: 10 },
+        onReject: { satisfaction: -5 }
+    },
+    {
+        id: 22,
+        title: "Nowe przepisy dotyczące praw człowieka",
+        description: "Wprowadzenie nowych przepisów dotyczących ochrony praw człowieka. To kosztowna decyzja, ale poprawi wizerunek miasta. Brak decyzji może spotkać się z krytyką aktywistów.",
+        onAccept: { money: -1500, satisfaction: 10 },
         onReject: { satisfaction: -5 }
     }
 ];
