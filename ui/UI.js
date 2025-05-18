@@ -1,7 +1,7 @@
 import { state } from '../data/config.js';
 
 export function drawUI() {
-  const { ctx, uiIcons, money, energy, population, gold, happinessLevel} = state;
+  const { ctx, uiIcons, money, energy, population, gold, happinessLevel } = state;
   const boxWidth = 180, boxHeight = 50, padding = 15, iconSize = 30, startX = 20, startY = 135;
 
   ctx.font = '16px Arial';
@@ -44,15 +44,11 @@ export function drawUI() {
     ctx.fillText(profile.username, avatarX + boxWidth / 2, avatarY + avatarSize + 30);
   }
 
-  state.uiIcons.happiness.src = 'assets/img/happy_high.png';
-
-  if(state.happinessLevel >= 100 && state.happinessLevel > 55){
+  if (state.happinessLevel >= 100 && state.happinessLevel > 55) {
     state.uiIcons.happiness.src = 'assets/img/happy_high.png';
-  }
-  else if(state.happinessLevel <= 55 && state.happinessLevel > 30){
+  } else if (state.happinessLevel <= 55 && state.happinessLevel > 30) {
     state.uiIcons.happiness.src = 'assets/img/happy_mid.png';
-  }
-  else if(state.happinessLevel <= 30 && state.happinessLevel >=0){
+  } else if (state.happinessLevel <= 30 && state.happinessLevel >= 0) {
     state.uiIcons.happiness.src = 'assets/img/happy_wrong.png';
   }
 
@@ -65,35 +61,6 @@ export function drawUI() {
   ];
 
   resources.forEach(res => {
-    const questBtnX = startX;
-    const questBtnY = startY + 5 * (boxHeight + padding);
-    const questBtnW = boxWidth;
-    const questBtnH = 40;
-
-    ctx.fillStyle = "#3498DB";
-    ctx.strokeStyle = "#1F618D";
-    ctx.textAlign = "left";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(questBtnX + 10, questBtnY);
-    ctx.lineTo(questBtnX + questBtnW - 10, questBtnY);
-    ctx.arcTo(questBtnX + questBtnW, questBtnY, questBtnX + questBtnW, questBtnY + questBtnH, 10);
-    ctx.lineTo(questBtnX + questBtnW, questBtnY + questBtnH - 10);
-    ctx.arcTo(questBtnX + questBtnW, questBtnY + questBtnH, questBtnX + 10, questBtnY + questBtnH, 10);
-    ctx.lineTo(questBtnX + 10, questBtnY + questBtnH);
-    ctx.arcTo(questBtnX, questBtnY + questBtnH, questBtnX, questBtnY + 10, 10);
-    ctx.lineTo(questBtnX, questBtnY + 10);
-    ctx.arcTo(questBtnX, questBtnY, questBtnX + 10, questBtnY, 10);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 16px Arial";
-    ctx.fillText("Zadania", questBtnX + 55, questBtnY + 22);
-
-    state.questButton = { x: questBtnX, y: questBtnY, width: questBtnW, height: questBtnH };
-
     const gradient = ctx.createLinearGradient(startX, res.y, startX + boxWidth, res.y + boxHeight);
     gradient.addColorStop(0, "#333");
     gradient.addColorStop(1, "#555");
@@ -117,13 +84,56 @@ export function drawUI() {
 
     ctx.drawImage(res.icon, startX + 12, res.y + 12, iconSize, iconSize);
 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
-    ctx.font = "bold 18px 'Segoe UI', Tahoma, Geneva, sans-serif";
-    ctx.fillText(res.label, startX + iconSize + 20, res.y + 30);
-
     ctx.fillStyle = res.color;
+    ctx.font = "bold 18px 'Segoe UI'";
+    ctx.textAlign = "start";
     ctx.fillText(res.label, startX + iconSize + 20, res.y + 30);
   });
+
+  const questBtnX = startX;
+  const questBtnY = startY + 5 * (boxHeight + padding);
+  const questBtnW = boxWidth;
+  const questBtnH = 40;
+
+  ctx.fillStyle = "#3498DB";
+  ctx.strokeStyle = "#1F618D";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(questBtnX + 10, questBtnY);
+  ctx.lineTo(questBtnX + questBtnW - 10, questBtnY);
+  ctx.arcTo(questBtnX + questBtnW, questBtnY, questBtnX + questBtnW, questBtnY + questBtnH, 10);
+  ctx.lineTo(questBtnX + questBtnW, questBtnY + questBtnH - 10);
+  ctx.arcTo(questBtnX + questBtnW, questBtnY + questBtnH, questBtnX + 10, questBtnY + questBtnH, 10);
+  ctx.lineTo(questBtnX + 10, questBtnY + questBtnH);
+  ctx.arcTo(questBtnX, questBtnY + questBtnH, questBtnX, questBtnY + 10, 10);
+  ctx.lineTo(questBtnX, questBtnY + 10);
+  ctx.arcTo(questBtnX, questBtnY, questBtnX + 10, questBtnY, 10);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = "#fff";
+  ctx.font = "bold 16px Arial";
+  ctx.textAlign = "left";
+  ctx.fillText("Zadania", questBtnX + 55, questBtnY + 22);
+
+  state.questButton = { x: questBtnX, y: questBtnY, width: questBtnW, height: questBtnH };
+
+  const hasUnclaimed = state.quests?.some(q => q.claimed === false && q.completed === true);
+  if (hasUnclaimed) {
+    ctx.save();
+    ctx.fillStyle = "red";
+    ctx.beginPath();
+    ctx.arc(questBtnX + questBtnW - 15, questBtnY + 15, 8, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "white";
+    ctx.font = "bold 14px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("!", questBtnX + questBtnW - 15, questBtnY + 15);
+    ctx.restore();
+  }
 }
 
 export function drawEvent(event) {
