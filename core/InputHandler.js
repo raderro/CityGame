@@ -1,6 +1,6 @@
 import { state } from '../data/config.js';
 import { drawMap } from './MapRenderer.js';
-import { showBuildingMenu, placeBuilding, removeBuilding, showInfoMenu,  updateBuildingMenuItems} from './BuildingManager.js';
+import { showBuildingMenu, placeBuilding, removeBuilding, showInfoMenu, updateBuildingMenuItems } from './BuildingManager.js';
 import { showUpgradeMenu, upgradeBuilding } from './UpgradeManager.js';
 import { saveProfiles, setSelectedProfile } from './ProfileManager.js';
 import { loadGameState, saveGameState } from './GameManager.js';
@@ -22,7 +22,7 @@ export function setupInputHandlers(canvas) {
   canvas.addEventListener('click', (e) => {
     const x = e.offsetX;
     const y = e.offsetY;
-  
+
     if (state.isQuestMenuVisible) {
       for (const btn of state.questScrollButtons || []) {
         if (
@@ -136,7 +136,6 @@ function handleClick(e) {
     return;
   }
 
-
   if (state.isBuildingMenuVisible) {
     for (const item of state.buildingMenuItems) {
       if (
@@ -229,7 +228,7 @@ function handleClick(e) {
 
   if (state.isQuestMenuVisible) {
     const { offsetX, offsetY } = e;
-    
+
     for (const btn of state.questButtons) {
       if (
         offsetX >= btn.x &&
@@ -244,7 +243,7 @@ function handleClick(e) {
         return;
       }
     }
-  
+
     const close = state.questCloseButton;
     if (
       offsetX >= close.x &&
@@ -270,12 +269,33 @@ function handleClick(e) {
       drawMap();
       return;
     }
-  }  
+  }
+
+  if (e.button !== 0 || state.isDragging) return;
+
+  if (state.sellGoldButton) {
+    const btn = state.sellGoldButton;
+    if (
+      mouseX >= btn.x && mouseX <= btn.x + btn.width &&
+      mouseY >= btn.y && mouseY <= btn.y + btn.height
+    ) {
+      const multiplier = state.sellMultiplier || 1;
+      const goldToSell = Math.min(state.gold, 50 * multiplier);
+      const pricePerGold = 5;
+      if (goldToSell > 0) {
+        state.gold -= goldToSell;
+        state.money += goldToSell * pricePerGold;
+        playClickSound();
+        drawMap();
+      }
+      return;
+    }
+  }
 
   if (state.isMainMenuVisible) {
     const mouseX = e.offsetX;
     const mouseY = e.offsetY;
-  
+
     const profiles = state.profiles;
     const boxSize = 120;
     const spacingX = 60;
@@ -285,13 +305,13 @@ function handleClick(e) {
     const totalWidth = cols * boxSize + (cols - 1) * spacingX;
     const startX = state.canvas.width / 2 - totalWidth / 2;
     const startY = 360;
-    
+
     profiles.forEach((profile, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
       const x = startX + col * (boxSize + spacingX);
       const y = startY + row * (boxSize + spacingY + 30);
-    
+
       if (
         mouseX >= x && mouseX <= x + boxSize &&
         mouseY >= y && mouseY <= y + boxSize
@@ -301,8 +321,8 @@ function handleClick(e) {
         setSelectedProfile(i);
         return;
       }
-    });    
-  
+    });
+
     if (
       state.createProfileBtn &&
       mouseX >= state.createProfileBtn.x &&
@@ -314,7 +334,7 @@ function handleClick(e) {
       playClickSound();
       return;
     }
-  
+
     if (
       state.selectedProfileIndex !== null &&
       state.playBtn &&
@@ -345,14 +365,14 @@ function handleClick(e) {
         drawMap();
         return;
       }
-    }    
-  
+    }
+
     if (state.creatingProfile) {
       const usernameFieldX = state.canvas.width / 2 - 100;
       const usernameFieldY = 240;
       const usernameFieldWidth = 200;
       const usernameFieldHeight = 35;
-      
+
       if (
         mouseX >= usernameFieldX && mouseX <= usernameFieldX + usernameFieldWidth &&
         mouseY >= usernameFieldY && mouseY <= usernameFieldY + usernameFieldHeight
@@ -363,17 +383,17 @@ function handleClick(e) {
         state.isEditingUsername = false;
         playClickSound();
       }
-  
+
       if (state.creatingProfile) {
         const startX = state.canvas.width / 2 - 100;
         const startY = 330;
         const avatarSize = 50;
         const spacing = 60;
-      
+
         state.availableAvatars.forEach((avatar, i) => {
           const x = startX + i * spacing;
           const y = startY;
-      
+
           if (
             mouseX >= x && mouseX <= x + avatarSize &&
             mouseY >= y && mouseY <= y + avatarSize
@@ -382,7 +402,7 @@ function handleClick(e) {
           }
         });
       }
-  
+
       if (
         mouseX >= state.canvas.width / 2 - 75 &&
         mouseX <= state.canvas.width / 2 + 75 &&
@@ -403,9 +423,9 @@ function handleClick(e) {
         return;
       }
     }
-  
+
     return;
-  }  
+  }
 
   const worldX = (mouseX - state.cameraOffsetX) / state.zoom;
   const worldY = (mouseY - state.cameraOffsetY) / state.zoom;
@@ -422,7 +442,7 @@ function handleClick(e) {
         playClickSound();
         drawMap();
       } else {
-        if(!state.isQuestMenuVisible){
+        if (!state.isQuestMenuVisible) {
           showUpgradeMenu(x, y);
           playClickSound();
         }
@@ -430,7 +450,7 @@ function handleClick(e) {
       }
       return;
     } else {
-      if(!state.isQuestMenuVisible){
+      if (!state.isQuestMenuVisible) {
         showBuildingMenu(x, y);
         playClickSound();
         state.isUpgradeMenuVisible = false;
@@ -442,7 +462,7 @@ function handleClick(e) {
 }
 
 function handleZoom(e) {
-  if(state.isMainMenuVisible) return;
+  if (state.isMainMenuVisible) return;
   e.preventDefault();
   state.zoom = e.deltaY < 0 ? state.zoom + 0.1 : Math.max(0.5, state.zoom - 0.1);
   drawMap();
@@ -477,6 +497,6 @@ function handleKeydown(e) {
 function playClickSound() {
   if (state.clickSound) {
     state.clickSound.currentTime = 0;
-    state.clickSound.play().catch(() => {});
+    state.clickSound.play().catch(() => { });
   }
 }

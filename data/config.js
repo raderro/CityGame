@@ -11,6 +11,7 @@ export const state = {
   gold: 0,
   cameraOffsetX: 0,
   cameraOffsetY: 0,
+  sellMultiplier: 1,
   isDragging: false,
   dragStart: { x: 0, y: 0 },
   cameraStart: { x: 0, y: 0 },

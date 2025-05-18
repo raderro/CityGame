@@ -44,12 +44,14 @@ export function drawUI() {
     ctx.fillText(profile.username, avatarX + boxWidth / 2, avatarY + avatarSize + 30);
   }
 
-  if (state.happinessLevel >= 100 && state.happinessLevel > 55) {
-    state.uiIcons.happiness.src = 'assets/img/happy_high.png';
-  } else if (state.happinessLevel <= 55 && state.happinessLevel > 30) {
-    state.uiIcons.happiness.src = 'assets/img/happy_mid.png';
-  } else if (state.happinessLevel <= 30 && state.happinessLevel >= 0) {
-    state.uiIcons.happiness.src = 'assets/img/happy_wrong.png';
+  uiIcons.happiness.src = 'assets/img/happy_high.png';
+
+  if (happinessLevel >= 100 && happinessLevel > 55) {
+    uiIcons.happiness.src = 'assets/img/happy_high.png';
+  } else if (happinessLevel <= 55 && happinessLevel > 30) {
+    uiIcons.happiness.src = 'assets/img/happy_mid.png';
+  } else if (happinessLevel <= 30 && happinessLevel >= 0) {
+    uiIcons.happiness.src = 'assets/img/happy_wrong.png';
   }
 
   const resources = [
@@ -88,6 +90,38 @@ export function drawUI() {
     ctx.font = "bold 18px 'Segoe UI'";
     ctx.textAlign = "start";
     ctx.fillText(res.label, startX + iconSize + 20, res.y + 30);
+
+    if (res.icon === uiIcons.gold) {
+      const buttonX = startX + 150;
+      const buttonY = res.y + boxHeight - 37.5;
+      const buttonW = 25;
+      const buttonH = 25;
+
+      ctx.fillStyle = "#e67e22";
+      ctx.strokeStyle = "#d35400";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(buttonX + 5, buttonY);
+      ctx.lineTo(buttonX + buttonW - 5, buttonY);
+      ctx.arcTo(buttonX + buttonW, buttonY, buttonX + buttonW, buttonY + buttonH, 5);
+      ctx.lineTo(buttonX + buttonW, buttonY + buttonH - 5);
+      ctx.arcTo(buttonX + buttonW, buttonY + buttonH, buttonX + buttonW - 5, buttonY + buttonH, 5);
+      ctx.lineTo(buttonX + 5, buttonY + buttonH);
+      ctx.arcTo(buttonX, buttonY + buttonH, buttonX, buttonY + buttonH - 5, 5);
+      ctx.lineTo(buttonX, buttonY + 5);
+      ctx.arcTo(buttonX, buttonY, buttonX + 5, buttonY, 5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = "green";
+      ctx.font = "bold 18px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("$", buttonX + buttonW / 2, buttonY + buttonH / 2);
+
+      state.sellGoldButton = { x: buttonX, y: buttonY, width: buttonW, height: buttonH };
+    }
   });
 
   const questBtnX = startX;
