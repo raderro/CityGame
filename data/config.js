@@ -526,7 +526,7 @@ export const buildingData = {
       1: {
         name: "Lotnisko",
         cost: 12500,
-        description: "Dom jednorodzinny z ogrodem. Może pomieścić 5 osób. Produkuje 10 pieniędzy co 5 sekund. Zużywa 25 energii.",
+        description: "Lotnisko małej wielkości. Produkuje 20 pieniędzy co 5 sekund. Zużywa 35 energii.",
         production: 20,
         energy: 35,
         population: 0
@@ -534,7 +534,7 @@ export const buildingData = {
       2: {
         name: "Lotnisko",
         cost: 22000,
-        description: "Dom jednorodzinny z basenem. Może pomieścić 10 osób. Produkuje 15 pieniędzy co 5 sekund. Zużywa 20 energii.",
+        description: "Lotnisko średniej wielkości. Produkuje 45 pieniędzy co 5 sekund. Zużywa 45 energii.",
         production: 45,
         energy: 45,
         population: 0
@@ -542,7 +542,7 @@ export const buildingData = {
       3: {
         name: "Lotnisko",
         cost: 45000,
-        description: "Dom jednorodzinny z ogrodem i basenem. Może pomieścić 15 osób. Produkuje 20 pieniędzy co 5 sekund. Zużywa 15 energii.",
+        description: "Lotnisko dużej wielkości. Produkuje 75 pieniędzy co 5 sekund. Zużywa 55 energii.",
         production: 75,
         energy: 55,
         population: 0
